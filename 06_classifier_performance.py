@@ -2,30 +2,31 @@ import csv
 import numpy as np
 from sklearn import svm
 from sklearn.metrics import f1_score, precision_score, recall_score, confusion_matrix
+from sklearn import preprocessing 
 
-train = []
-test = []
 all_data = []
 
 # Vamos ler o arquivo e dividir metade em dados de treino e metade em dados de teste
 with open('data/random.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-    add_to_test = False
     for row in csv_reader:
         all_data.append(row)
-        if add_to_test:
-            test.append(row)
-            add_to_test = False
-        else:
-            train.append(row)
-            add_to_test = True
 
-test = np.array(test)
-train = np.array(train)
+all_data = np.array(all_data)
+
+# A notação [::2,:] as linhas pares da matriz. A notação [1::2,:] pega todos as linhas ímpares.
+# Desta forma, tanto 'train' quanto 'test' possuem 50% de dados na classe 0 e 50% na classe 1.
+train = all_data[::2,:]
+test = all_data[1::2,:]
 
 # A notação [:,1:] serve para remover a primeira coluna da matriz (que é a coluna das classificações)
 train_without_class = train[:,1:]
 test_without_class = test[:,1:]
+
+# Lembra do scale? :)
+train_without_class = preprocessing.scale(train_without_class)
+test_without_class = preprocessing.scale(test_without_class)
+
 # A notação [:,0] serve para pegar apenas a primeira coluna da matriz (que é a coluna das classificações)
 train_class = train[:,0]
 test_class = test[:,0]
@@ -90,17 +91,17 @@ print(confusion_matrix(test_class, predictions))
 #                                  |---------------------------|
 #                                  |  Positivos  |  Negativos  |
 #     -----------------------------X---------------------------|
-#     |                | Positivos |    23       |     7       |
+#     |                | Positivos |    22       |     6       |
 #     |   Predições    |-----------X---------------------------|
-#     |                | Negativos |     2       |    18       |
+#     |                | Negativos |     3       |    19       |
 #     ---------------------------------------------------------|
 
 
 
 # https://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics
-precision = precision_score(test_class, predictions)      # 23 / (23 + 7) = 0.76667
-recall = recall_score(test_class, predictions)            # 23 / (23 + 2) = 0.92
-f1_score = f1_score(test_class, predictions)              # 2 * 0.7667 * 0.92 / (0.7667 + 0.92) = 0.82
+precision = precision_score(test_class, predictions)      # 22 / (22 + 6) = 0.7857
+recall = recall_score(test_class, predictions)            # 22 / (22 + 3) = 0.88
+f1_score = f1_score(test_class, predictions)              # 2 * 0.7857 * 0.88 / (0.7857 + 0.92) = 0.83
 print('Precisão: ' + str(precision))
 print('Recall: ' + str(recall))
 print('F1 Score: ' + str(f1_score))
