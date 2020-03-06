@@ -1,3 +1,5 @@
+# Para importar esta biblioteca, primeiro é necessário installar o sklearn. Execute o seguinte comando:
+# pip install -U scikit-learn
 from sklearn import svm
 
 # A matriz X tem o formato de [n_amostras, n_caracteristicas]
