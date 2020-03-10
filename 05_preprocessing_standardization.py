@@ -14,8 +14,9 @@ from sklearn import preprocessing
 # [ -1  1  1 ]
 X = [[-2, 0, 2], [-1, 0, 1], [-1, 1, 1]]
 
-# o scale é um dos vários pré-processadores no scikit... Este transforma os dados de entrada do sistema para média 0 e variância 1.
-X_scaled = preprocessing.scale(X)
+# o StandardScaler é um dos vários pré-processadores no scikit... Este transforma os dados de entrada do sistema para média 0 e variância 1.
+scaler = preprocessing.StandardScaler()
+X_scaled = scaler.fit_transform(X)
 print(X_scaled)
 
 print(X_scaled.mean(axis=0))

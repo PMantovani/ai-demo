@@ -23,9 +23,10 @@ test = all_data[1::2,:]
 train_without_class = train[:,1:]
 test_without_class = test[:,1:]
 
-# Lembra do scale? :)
-train_without_class = preprocessing.scale(train_without_class)
-test_without_class = preprocessing.scale(test_without_class)
+# Lembra do scaler? :)
+scaler = preprocessing.StandardScaler()
+train_without_class = scaler.fit_transform(train_without_class)
+test_without_class = scaler.transform(test_without_class)
 
 # A notação [:,0] serve para pegar apenas a primeira coluna da matriz (que é a coluna das classificações)
 train_class = train[:,0]
@@ -91,17 +92,17 @@ print(confusion_matrix(test_class, predictions))
 #                                  |---------------------------|
 #                                  |  Positivos  |  Negativos  |
 #     -----------------------------X---------------------------|
-#     |                | Positivos |    22       |     6       |
+#     |                | Positivos |    23       |     7       |
 #     |   Predições    |-----------X---------------------------|
-#     |                | Negativos |     3       |    19       |
+#     |                | Negativos |     2       |    18       |
 #     ---------------------------------------------------------|
 
 
 
 # https://scikit-learn.org/stable/modules/classes.html#module-sklearn.metrics
-precision = precision_score(test_class, predictions)      # 22 / (22 + 6) = 0.7857
-recall = recall_score(test_class, predictions)            # 22 / (22 + 3) = 0.88
-f1_score = f1_score(test_class, predictions)              # 2 * 0.7857 * 0.88 / (0.7857 + 0.92) = 0.83
+precision = precision_score(test_class, predictions)      # 23 / (23 + 7) = 0.7667
+recall = recall_score(test_class, predictions)            # 23 / (23 + 2) = 0.92
+f1_score = f1_score(test_class, predictions)              # 2 * 0.7667 * 0.92 / (0.7667 + 0.92) = 0.8363
 print('Precisão: ' + str(precision))
 print('Recall: ' + str(recall))
 print('F1 Score: ' + str(f1_score))
